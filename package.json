@@ -1,8 +1,19 @@
 {
   "name": "@ohto/nuxt-gtag-ecommerce",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "type": "module",
   "main": "./module.ts",
+  "types": "./runtime/types.d.ts",
+  "exports": {
+    ".": {
+      "import": "./module.ts",
+      "types": "./runtime/types.d.ts"
+    }
+  },
+  "files": [
+    "module.ts",
+    "runtime"
+  ],
   "author": "Liam Hall",
   "dependencies": {},
   "peerDependencies": {
