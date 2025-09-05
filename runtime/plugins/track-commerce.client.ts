@@ -1,60 +1,38 @@
 import { defineNuxtPlugin } from "#app";
 import type { GA4Item, GA4Order } from "../types";
 
-// Type for the trackEvent function
-type TrackEventFunction = (
-  eventName: string,
-  parameters?: Record<string, any>
-) => void;
-
 export default defineNuxtPlugin({
   name: "nuxt-gtag-ecommerce",
-  dependsOn: ["nuxt-gtag"],
   setup(nuxtApp: any) {
-    // Try to get useTrackEvent - handle both auto-import enabled/disabled scenarios
-    let trackEvent: (
+    console.log("🔥 nuxt-gtag-ecommerce plugin loading...");
+
+    // Simple function to check if gtag is available
+    const getGtag = () => {
+      if (typeof window !== "undefined" && (window as any).gtag) {
+        return (window as any).gtag;
+      }
+      return null;
+    };
+
+    // Basic track event function
+    const trackEvent = (
       eventName: string,
       parameters?: Record<string, any>
-    ) => void;
-
-    try {
-      // First try: assume auto-imports are enabled (default Nuxt 3 behavior)
-      trackEvent = useTrackEvent();
-    } catch (error) {
-      // Fallback: try to get it from nuxtApp context or import manually
-      try {
-        // Try to access from nuxtApp (in case it's available there)
-        const { useTrackEvent: useTrackEventFn } = nuxtApp.$nuxtGtag || {};
-        if (useTrackEventFn) {
-          trackEvent = useTrackEventFn();
-        } else {
-          // Last resort: use direct gtag if available
-          trackEvent = (
-            eventName: string,
-            parameters?: Record<string, any>
-          ) => {
-            if (typeof window !== "undefined" && (window as any).gtag) {
-              (window as any).gtag("event", eventName, parameters);
-            } else {
-              console.warn(
-                "Google Analytics tracking is not available. Make sure nuxt-gtag is properly configured."
-              );
-            }
-          };
+    ) => {
+      const gtag = getGtag();
+      if (gtag) {
+        gtag("event", eventName, parameters);
+      } else {
+        // Try to queue the event for when gtag becomes available
+        if (typeof window !== "undefined") {
+          (window as any).dataLayer = (window as any).dataLayer || [];
+          (window as any).dataLayer.push({
+            event: eventName,
+            ...parameters,
+          });
         }
-      } catch (fallbackError) {
-        console.warn(
-          "Failed to initialize tracking. Falling back to direct gtag implementation."
-        );
-        trackEvent = (eventName: string, parameters?: Record<string, any>) => {
-          if (typeof window !== "undefined" && (window as any).gtag) {
-            (window as any).gtag("event", eventName, parameters);
-          } else {
-            console.warn("Google Analytics tracking is not available.");
-          }
-        };
       }
-    }
+    };
 
     const trackCommerce = {
       /**
@@ -178,6 +156,11 @@ export default defineNuxtPlugin({
         }),
     };
 
+    console.log(
+      "🔥 Providing $trackCommerce with methods:",
+      Object.keys(trackCommerce)
+    );
     nuxtApp.provide("trackCommerce", trackCommerce);
+    console.log("🔥 $trackCommerce provided successfully");
   },
 });
