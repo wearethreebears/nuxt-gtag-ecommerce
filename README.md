@@ -3,7 +3,7 @@
 A Nuxt 3 module that extends [`nuxt-gtag`](https://nuxt.com/modules/gtag) with a **typed API for Google Analytics 4 (GA4) ecommerce events**.
 
 ✔️ Easy-to-use helpers for all GA4 ecommerce events  
-✔️ Internally powered by `useTrackEvent` from `nuxt-gtag`  
+✔️ Internally powered by `useTrackEvent` from `nuxt-gtag` (runtime resolution)  
 ✔️ TypeScript support with autocompletion  
 ✔️ Works with JavaScript too  
 ✔️ Enforces `nuxt-gtag` as a dependency
@@ -20,9 +20,14 @@ npm install nuxt-gtag @ohto/nuxt-gtag-ecommerce
 
 ## ⚙️ Setup
 
+**Important:** Make sure to add `nuxt-gtag` **before** this module in your `nuxt.config.ts`:
+
 ```ts
 export default defineNuxtConfig({
-  modules: ["nuxt-gtag", "@ohto/nuxt-gtag-ecommerce"],
+  modules: [
+    "nuxt-gtag", // ← Must be added first
+    "@ohto/nuxt-gtag-ecommerce",
+  ],
   gtag: {
     id: "G-XXXXXXXXXX",
   },
