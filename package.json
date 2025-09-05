@@ -1,0 +1,12 @@
+{
+  "name": "nuxt-gtag-ecommerce",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./module.ts",
+  "author": "Liam Hall",
+  "dependencies": {},
+  "peerDependencies": {
+    "@nuxtjs/gtag": "^2.0.0",
+    "nuxt": "^3.0.0"
+  }
+}
