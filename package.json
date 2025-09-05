@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-gtag-ecommerce",
+  "name": "@ohto/nuxt-gtag-ecommerce",
   "version": "0.1.0",
   "type": "module",
   "main": "./module.ts",
