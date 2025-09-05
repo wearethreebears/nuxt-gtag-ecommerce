@@ -6,9 +6,9 @@ export default defineNuxtModule({
     configKey: "trackCommerce",
   },
   setup(_, nuxt) {
-    if (!nuxt.options.modules.includes("@nuxtjs/gtag")) {
+    if (!nuxt.options.modules.includes("nuxt-gtag")) {
       console.warn(
-        "⚠️ @ohto/nuxt-gtag-ecommerce: @nuxtjs/gtag is required. Please add it to your nuxt.config.ts"
+        "⚠️ @ohto/nuxt-gtag-ecommerce: nuxt/gtag is required. Please add it to your nuxt.config.ts"
       );
     }
 
