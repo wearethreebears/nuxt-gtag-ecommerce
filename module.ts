@@ -1,21 +1,21 @@
-import { defineNuxtModule, addPlugin, createResolver } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, createResolver } from "@nuxt/kit";
 
 export default defineNuxtModule({
   meta: {
-    name: 'nuxt-track-commerce',
-    configKey: 'trackCommerce',
+    name: "@ohto/nuxt-gtag-ecommerce",
+    configKey: "trackCommerce",
   },
   setup(_, nuxt) {
-    if (!nuxt.options.modules.includes('@nuxtjs/gtag')) {
+    if (!nuxt.options.modules.includes("@nuxtjs/gtag")) {
       console.warn(
-        '⚠️ nuxt-track-commerce: @nuxtjs/gtag is required. Please add it to your nuxt.config.ts'
-      )
+        "⚠️ @ohto/nuxt-gtag-ecommerce: @nuxtjs/gtag is required. Please add it to your nuxt.config.ts"
+      );
     }
 
-    const resolver = createResolver(import.meta.url)
+    const resolver = createResolver(import.meta.url);
     addPlugin({
-      src: resolver.resolve('./runtime/plugins/track-commerce.client'),
-      mode: 'client',
-    })
+      src: resolver.resolve("./runtime/plugins/track-commerce.client"),
+      mode: "client",
+    });
   },
-})
+});
