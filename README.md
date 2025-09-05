@@ -34,6 +34,10 @@ export default defineNuxtConfig({
 });
 ```
 
+### Auto-imports Disabled?
+
+If you have auto-imports disabled in your Nuxt config, the module will automatically fall back to using the direct `gtag` function. No additional configuration is needed - the module handles both scenarios gracefully.
+
 ---
 
 ## 📖 Usage
