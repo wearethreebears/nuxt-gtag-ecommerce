@@ -1,45 +1,18 @@
 import { defineNuxtPlugin } from "#app";
+import { useTrackEvent } from "#imports";
 import type { GA4Item, GA4Order } from "../types";
 
 export default defineNuxtPlugin({
   name: "nuxt-gtag-ecommerce",
+  dependsOn: ["nuxt-gtag"],
   setup(nuxtApp: any) {
-    console.log("🔥 nuxt-gtag-ecommerce plugin loading...");
-
-    // Simple function to check if gtag is available
-    const getGtag = () => {
-      if (typeof window !== "undefined" && (window as any).gtag) {
-        return (window as any).gtag;
-      }
-      return null;
-    };
-
-    // Basic track event function
-    const trackEvent = (
-      eventName: string,
-      parameters?: Record<string, any>
-    ) => {
-      const gtag = getGtag();
-      if (gtag) {
-        gtag("event", eventName, parameters);
-      } else {
-        // Try to queue the event for when gtag becomes available
-        if (typeof window !== "undefined") {
-          (window as any).dataLayer = (window as any).dataLayer || [];
-          (window as any).dataLayer.push({
-            event: eventName,
-            ...parameters,
-          });
-        }
-      }
-    };
-
     const trackCommerce = {
       /**
        * Track when a user views a single product.
        * @param item - The product being viewed
        */
-      viewItem: (item: GA4Item) => trackEvent("view_item", { items: [item] }),
+      viewItem: (item: GA4Item) =>
+        useTrackEvent("view_item", { items: [item] }),
 
       /**
        * Track when a user views a list of products.
@@ -48,7 +21,7 @@ export default defineNuxtPlugin({
        * @param listName - Optional list name (e.g., "Related Products")
        */
       viewItemList: (items: GA4Item[], listId?: string, listName?: string) =>
-        trackEvent("view_item_list", {
+        useTrackEvent("view_item_list", {
           item_list_id: listId,
           item_list_name: listName,
           items,
@@ -61,7 +34,7 @@ export default defineNuxtPlugin({
        * @param listName - Optional list name
        */
       selectItem: (item: GA4Item, listId?: string, listName?: string) =>
-        trackEvent("select_item", {
+        useTrackEvent("select_item", {
           item_list_id: listId,
           item_list_name: listName,
           items: [item],
@@ -72,20 +45,20 @@ export default defineNuxtPlugin({
        * @param item - The product added
        */
       addToCart: (item: GA4Item) =>
-        trackEvent("add_to_cart", { items: [item] }),
+        useTrackEvent("add_to_cart", { items: [item] }),
 
       /**
        * Track when a product is removed from the cart.
        * @param item - The product removed
        */
       removeFromCart: (item: GA4Item) =>
-        trackEvent("remove_from_cart", { items: [item] }),
+        useTrackEvent("remove_from_cart", { items: [item] }),
 
       /**
        * Track when the user views their shopping cart.
        * @param items - All items currently in the cart
        */
-      viewCart: (items: GA4Item[]) => trackEvent("view_cart", { items }),
+      viewCart: (items: GA4Item[]) => useTrackEvent("view_cart", { items }),
 
       /**
        * Track when checkout begins.
@@ -93,7 +66,7 @@ export default defineNuxtPlugin({
        * @param coupon - Optional coupon code
        */
       beginCheckout: (items: GA4Item[], coupon?: string) =>
-        trackEvent("begin_checkout", { coupon, items }),
+        useTrackEvent("begin_checkout", { coupon, items }),
 
       /**
        * Track when payment info is added during checkout.
@@ -106,7 +79,7 @@ export default defineNuxtPlugin({
         paymentType: string,
         coupon?: string
       ) =>
-        trackEvent("add_payment_info", {
+        useTrackEvent("add_payment_info", {
           payment_type: paymentType,
           coupon,
           items,
@@ -123,7 +96,7 @@ export default defineNuxtPlugin({
         shippingTier: string,
         coupon?: string
       ) =>
-        trackEvent("add_shipping_info", {
+        useTrackEvent("add_shipping_info", {
           shipping_tier: shippingTier,
           coupon,
           items,
@@ -134,7 +107,7 @@ export default defineNuxtPlugin({
        * @param order - Order details (transaction ID, total, currency, etc.)
        */
       purchase: (order: GA4Order) =>
-        trackEvent("purchase", {
+        useTrackEvent("purchase", {
           transaction_id: order.id,
           value: order.total,
           currency: order.currency,
@@ -150,17 +123,12 @@ export default defineNuxtPlugin({
        * @param items - Optional list of refunded items
        */
       refund: (orderId: string, items?: GA4Item[]) =>
-        trackEvent("refund", {
+        useTrackEvent("refund", {
           transaction_id: orderId,
           items,
         }),
     };
 
-    console.log(
-      "🔥 Providing $trackCommerce with methods:",
-      Object.keys(trackCommerce)
-    );
     nuxtApp.provide("trackCommerce", trackCommerce);
-    console.log("🔥 $trackCommerce provided successfully");
   },
 });
