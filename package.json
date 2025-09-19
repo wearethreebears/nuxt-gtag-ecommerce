@@ -19,5 +19,12 @@
   "peerDependencies": {
     "nuxt-gtag": "^4.0.0",
     "nuxt": "^3.0.0"
-  }
+  },
+  "keywords": [
+    "nuxt",
+    "gtag",
+    "google-anlytics",
+    "analytics",
+    "nuxt-gtag"
+  ]
 }
